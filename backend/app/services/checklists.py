@@ -1,4 +1,5 @@
-from sqlmodel import Session, select
+from sqlmodel import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..api.schemas.checklist import Checklist_Create
 from ..exceptions import NotFoundException
@@ -6,13 +7,13 @@ from ..models.checklists import Checklists
 
 
 class ChecklistService:
-    def __init__(self, session: Session):
+    def __init__(self, session: AsyncSession):
         self.session = session
 
     async def get_checklists(self) -> list[Checklists]:
-        result =await self.session.execute(select(Checklists))
+        result = await self.session.execute(select(Checklists))
         data = result.scalars()
-        return data.all()
+        return list(data.all())
 
     async def get_one_checklist(self, checklist_id: int) -> Checklists:
         checklist = await self.session.get(Checklists, checklist_id)

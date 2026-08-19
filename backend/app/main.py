@@ -4,8 +4,8 @@ from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 from scalar_fastapi import get_scalar_api_reference
 from sqlalchemy.exc import SQLAlchemyError
+from .api.router import master_router
 
-from app.api.router import checklists, notes, checklist_items
 
 from .data.session import init_db
 from .exceptions import NotFoundException
@@ -18,9 +18,7 @@ async def lifespan_handler(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan_handler, title="Yada Yada API", version="0.1.0")
-app.include_router(checklists.router)
-app.include_router(notes.router)
-app.include_router(checklist_items.router)
+app.include_router(master_router)
 
 
 @app.get("/")

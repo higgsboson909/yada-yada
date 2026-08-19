@@ -1,4 +1,5 @@
 from fastapi import APIRouter, status
+from ..deps import userDep
 
 from ..deps import noteServiceDep
 from ..schemas.note import Note_Create, Note_Read, Note_Update
@@ -21,8 +22,12 @@ async def get_one_note(id: int, service: noteServiceDep):
     return note
 
 
-@router.post("/create/", response_model=Note_Read, status_code=status.HTTP_201_CREATED)
-async def create_note(note: Note_Create, service: noteServiceDep):
+@router.post(
+    "/create/",
+    response_model=Note_Read,
+    status_code=status.HTTP_201_CREATED,
+)
+async def create_note(note: Note_Create, service: noteServiceDep, user: userDep):
     """create a new note"""
     new_note = await service.create_note(note)
     return new_note

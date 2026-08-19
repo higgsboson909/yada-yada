@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class Note_Read(BaseModel):
@@ -13,5 +13,5 @@ class Note_Create(BaseModel):
 
 
 class Note_Update(BaseModel):
-    title: str | None  = None
-    content:  str | None  = None
+    title: str | None = None
+    content: str | None = None

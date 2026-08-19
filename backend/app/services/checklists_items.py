@@ -1,14 +1,14 @@
-from sqlmodel import Session, select
+from sqlmodel import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from ..models.checklist_items import Checklist_Items
 
-from app.models.checklist_items import Checklist_Items
-
-from ..api.schemas.checklist_item import ChecklistItem_Create, ChecklistItem_Read
+from ..api.schemas.checklist_item import ChecklistItem_Create
 from ..exceptions import NotFoundException
 from ..models.checklists import Checklists
 
 
 class ChecklistItemService:
-    def __init__(self, session: Session):
+    def __init__(self, session: AsyncSession):
         self.session = session
 
     async def get_checklist_items(
@@ -18,11 +18,9 @@ class ChecklistItemService:
             select(Checklist_Items).where(Checklist_Items.checklist_id == checklist_id)
         )
 
-        return checklist_items.scalars().all()
+        return list(checklist_items.scalars().all())
 
-    async def get_one_checklist_item(
-        self, checklist_item_id: int
-    ) -> Checklist_Items:
+    async def get_one_checklist_item(self, checklist_item_id: int) -> Checklist_Items:
         checklist_item = await self.session.get(Checklist_Items, checklist_item_id)
         if not checklist_item:
             raise NotFoundException(checklist_item_id)

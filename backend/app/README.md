@@ -68,11 +68,13 @@ app/
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    cd backend/app
    ```
 
 2. **Install dependencies**
+
    ```bash
    uv sync
    # or with pip:
@@ -81,6 +83,7 @@ app/
 
 3. **Configure environment variables**
    Create a `.env` file in the app directory:
+
    ```
    POSTGRES_SERVER=localhost
    POSTGRES_USER=your_user
@@ -90,6 +93,7 @@ app/
    ```
 
 4. **Run the application**
+
    ```bash
    fastapi run main.py
    ```
@@ -124,12 +128,14 @@ app/
 ## Documentation
 
 Access the interactive API documentation at:
+
 - **Scalar UI**: `http://localhost:8000/scalar`
 - **OpenAPI Schema**: `http://localhost:8000/openapi.json`
 
 ## Database Models
 
 ### Notes
+
 ```python
 - id: int (primary key)
 - title: str
@@ -137,6 +143,7 @@ Access the interactive API documentation at:
 ```
 
 ### Checklists
+
 ```python
 - id: int (primary key)
 - title: str
@@ -144,6 +151,7 @@ Access the interactive API documentation at:
 ```
 
 ### Checklist Items
+
 ```python
 - id: int (primary key)
 - title: str
@@ -155,6 +163,7 @@ Access the interactive API documentation at:
 ## Error Handling
 
 The API includes comprehensive error handling:
+
 - **404 Not Found** - When an item cannot be found
 - **500 Internal Server Error** - For database and unexpected errors
 - Custom exception handlers for specific error types
@@ -178,6 +187,7 @@ The application follows a layered architecture:
 ## Contributing
 
 Contributions are welcome! Please ensure:
+
 - Code follows the existing style
 - All endpoints have docstrings
 - Error cases are properly handled
