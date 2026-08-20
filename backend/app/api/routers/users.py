@@ -1,12 +1,16 @@
 from typing import Annotated
+from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 
-from ..deps import userServiceDep
+from ...data.redis import add_jti_to_blacklist
 
-from fastapi import APIRouter, Depends
+
+from ..deps import get_user_access_token_data, userServiceDep
+
+from fastapi import APIRouter, Depends, status
 from ..schemas.user import UserCreate, UserRead
 
-router = APIRouter(prefix="/user")
+router = APIRouter(prefix="/user", tags=["User"])
 
 
 @router.post("/signup", response_model=UserRead)
@@ -28,3 +32,12 @@ async def login_user(
         "access_token": token,
         "type": "jwt",
     }
+
+
+@router.get("/logout")
+async def logout_user(user_data: Annotated[dict, Depends(get_user_access_token_data)]):
+    jti = user_data["jti"]
+    await add_jti_to_blacklist(jti)
+    return JSONResponse(
+        status_code=status.HTTP_200_OK, content="Logged out Successfully!"
+    )

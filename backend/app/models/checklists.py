@@ -1,7 +1,9 @@
 from typing import TYPE_CHECKING
+
 from sqlmodel import Field, Relationship, SQLModel
 
 from .checklist_items import Checklist_Items
+
 if TYPE_CHECKING:
     from .checklist_items import Checklist_Items
 

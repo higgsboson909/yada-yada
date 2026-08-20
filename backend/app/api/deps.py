@@ -1,4 +1,6 @@
 from typing import Annotated
+from ..data.redis import is_blacklisted
+
 from ..models.users import User
 from ..utils import decode_access_token
 from ..api.core.security import oauth2_scheme
@@ -46,19 +48,20 @@ checklistItemServiceDep = Annotated[
 userServiceDep = Annotated[UserService, Depends(get_user_service)]
 
 
-def get_access_token(token: Annotated[str, Depends(oauth2_scheme)]):
+async def get_user_access_token_data(token: Annotated[str, Depends(oauth2_scheme)]):
     print(token)
     data = decode_access_token(token)
-    if data is None:
-        return HTTPException(
+    if data is None or await is_blacklisted(data["jti"]):
+        raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token"
         )
     return data
 
 
 async def get_current_user(
-    token_data: Annotated[dict, Depends(get_access_token)], session: sessionDep
-) -> User:
+    token_data: Annotated[dict, Depends(get_user_access_token_data)],
+    session: sessionDep,
+) -> User | None:
     current_user = await session.get(User, token_data["user"]["id"])
     return current_user
 
