@@ -129,6 +129,16 @@ button {
   outline-offset: 2px;
 }
 
+/* Text fields show focus with the caret (and, for bordered inputs, their own
+   border highlight) rather than an outline ring. Buttons and links keep the
+   outline above for keyboard accessibility. */
+input:focus,
+input:focus-visible,
+textarea:focus,
+textarea:focus-visible {
+  outline: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
