@@ -23,6 +23,7 @@ This project is a multi-user notes and checklist platform. The source of truth i
 6. Run frontend lint/build and backend compile/tests before calling a task complete. Record blocked checks explicitly.
 7. After making and verifying a coherent code change, create a small, focused commit regularly instead of accumulating a large uncommitted batch. Never include unrelated user changes, secrets, `.env` files, or generated artifacts in the commit. Share the commit hash and summary after committing.
 8. Keep frontend styling inside React components whenever practical: prefer Tailwind utility classes, component-local style constants, and colocated component styles over separate global CSS files. Keep global CSS limited to resets, base typography, and truly global primitives. Split substantial React screens and repeated UI into modular components instead of keeping them in one monolithic file.
+9. Treat the user as a learner building full-stack development skills. For every requested change, explain both how to implement it and why that approach is used. Include relevant reasoning across React, TypeScript, FastAPI, SQLModel, Pydantic, PostgreSQL, authentication, testing, infrastructure, and related tooling. Prefer teaching through the user's actual code and clearly call out trade-offs, conventions, and important concepts rather than only providing the final result.
 
 ## References
 
