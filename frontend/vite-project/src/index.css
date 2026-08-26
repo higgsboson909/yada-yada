@@ -1,13 +1,98 @@
 @import "tailwindcss";
 
-:root {
-  font-family: ui-sans-serif, system-ui, sans-serif;
-  color: #292524;
-  background: #fafaf9;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
+/* ============================================================
+   Yada Yada design system
+   ------------------------------------------------------------
+   All color + font decisions live here as tokens and are consumed
+   across the app as Tailwind utilities (bg-surface, text-muted,
+   font-serif, ...). Change a token here and the whole UI follows.
+   ============================================================ */
+
+/* Font roles (static values -> font-sans / font-serif utilities). */
+@theme {
+  --font-sans: "Public Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Newsreader", ui-serif, Georgia, "Times New Roman", serif;
 }
 
+/* Semantic color values for the LIGHT theme. These raw variables are
+   what actually flip between light and dark. */
+:root {
+  --ds-canvas: #fafaf9;
+  --ds-surface: #ffffff;
+  --ds-surface-muted: #f5f5f4;
+  --ds-border: #e7e5e4;
+  --ds-border-strong: #a8a29e;
+  --ds-fg: #292524;
+  --ds-muted: #57534e;
+  --ds-subtle: #78716c;
+  --ds-primary: #1c1917;
+  --ds-primary-foreground: #ffffff;
+  --ds-primary-hover: #44403c;
+  --ds-accent: #d97706;
+  --ds-accent-foreground: #451a03;
+  --ds-accent-soft: #fef3c7;
+  --ds-accent-soft-foreground: #b45309;
+  --ds-ring: #f59e0b;
+  --ds-danger: #b91c1c;
+  --ds-danger-foreground: #991b1b;
+  --ds-danger-surface: #fef2f2;
+  --ds-danger-border: #fecaca;
+}
+
+/* Semantic color values for the DARK theme. Composed, not inverted. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ds-canvas: #0c0a09;
+    --ds-surface: #1c1917;
+    --ds-surface-muted: #292524;
+    --ds-border: #292524;
+    --ds-border-strong: #57534e;
+    --ds-fg: #f5f5f4;
+    --ds-muted: #a8a29e;
+    --ds-subtle: #78716c;
+    --ds-primary: #f59e0b;
+    --ds-primary-foreground: #451a03;
+    --ds-primary-hover: #fbbf24;
+    --ds-accent: #fbbf24;
+    --ds-accent-foreground: #451a03;
+    --ds-accent-soft: #451a03;
+    --ds-accent-soft-foreground: #fcd34d;
+    --ds-ring: #f59e0b;
+    --ds-danger: #fca5a5;
+    --ds-danger-foreground: #fecaca;
+    --ds-danger-surface: #450a0a;
+    --ds-danger-border: #7f1d1d;
+  }
+}
+
+/* Expose the semantic values to Tailwind as color utilities.
+   `inline` makes each utility reference the theme-switching variable
+   (e.g. .bg-canvas { background: var(--ds-canvas) }) so dark mode
+   applies automatically without dark: variants in components. */
+@theme inline {
+  --color-canvas: var(--ds-canvas);
+  --color-surface: var(--ds-surface);
+  --color-surface-muted: var(--ds-surface-muted);
+  --color-border: var(--ds-border);
+  --color-border-strong: var(--ds-border-strong);
+  --color-fg: var(--ds-fg);
+  --color-muted: var(--ds-muted);
+  --color-subtle: var(--ds-subtle);
+  --color-primary: var(--ds-primary);
+  --color-primary-foreground: var(--ds-primary-foreground);
+  --color-primary-hover: var(--ds-primary-hover);
+  --color-accent: var(--ds-accent);
+  --color-accent-foreground: var(--ds-accent-foreground);
+  --color-accent-soft: var(--ds-accent-soft);
+  --color-accent-soft-foreground: var(--ds-accent-soft-foreground);
+  --color-ring: var(--ds-ring);
+  --color-danger: var(--ds-danger);
+  --color-danger-foreground: var(--ds-danger-foreground);
+  --color-danger-surface: var(--ds-danger-surface);
+  --color-danger-border: var(--ds-danger-border);
+}
+
+/* Base + global primitives only (resets, page defaults, a11y). */
 * {
   box-sizing: border-box;
 }
@@ -16,6 +101,12 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  font-family: var(--font-sans);
+  background-color: var(--ds-canvas);
+  color: var(--ds-fg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 button,
@@ -29,25 +120,13 @@ button {
 }
 
 ::selection {
-  background: #fde68a;
-  color: #292524;
+  background: var(--ds-ring);
+  color: #ffffff;
 }
 
 :focus-visible {
-  outline: 3px solid #f59e0b;
+  outline: 3px solid var(--ds-ring);
   outline-offset: 2px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    color: #f5f5f4;
-    background: #0c0a09;
-  }
-
-  ::selection {
-    background: #b45309;
-    color: #fff;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
