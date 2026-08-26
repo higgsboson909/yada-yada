@@ -2,6 +2,7 @@ from typing import Annotated
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 
+
 from ...data.redis import add_jti_to_blacklist
 
 
@@ -14,10 +15,7 @@ router = APIRouter(prefix="/user", tags=["User"])
 
 
 @router.post("/signup", response_model=UserRead)
-async def create_user(
-    user: UserCreate,
-    service: userServiceDep,
-):
+async def create_user(user: UserCreate, service: userServiceDep):
     return await service.add(user)
 
 
@@ -34,7 +32,8 @@ async def login_user(
     }
 
 
-@router.get("/logout")
+@router.post("/logout")
+@router.get("/logout", include_in_schema=False)
 async def logout_user(user_data: Annotated[dict, Depends(get_user_access_token_data)]):
     jti = user_data["jti"]
     await add_jti_to_blacklist(jti)

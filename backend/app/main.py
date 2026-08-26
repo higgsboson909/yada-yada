@@ -7,14 +7,15 @@ from sqlalchemy.exc import SQLAlchemyError
 from .api.router import master_router
 
 
-from .data.session import init_db
+from .data.redis import close_redis
 from .exceptions import NotFoundException
 
 
 @asynccontextmanager
 async def lifespan_handler(app: FastAPI):
-    await init_db()
+    # Database schema is managed explicitly with Alembic migrations.
     yield
+    await close_redis()
 
 
 app = FastAPI(lifespan=lifespan_handler, title="Yada Yada API", version="0.1.0")
@@ -23,8 +24,8 @@ app.include_router(master_router)
 
 @app.get("/")
 def get_yadas():
-    """get everything"""
-    pass
+    """Basic health endpoint for local development and deployment probes."""
+    return {"name": "Yada Yada API", "status": "ok"}
 
 
 @app.get("/scalar", include_in_schema=False)

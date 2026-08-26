@@ -1,4 +1,5 @@
 from typing import Annotated
+from uuid import UUID
 from ..data.redis import is_blacklisted
 
 from ..models.users import User
@@ -62,7 +63,11 @@ async def get_current_user(
     token_data: Annotated[dict, Depends(get_user_access_token_data)],
     session: sessionDep,
 ) -> User | None:
-    current_user = await session.get(User, token_data["user"]["id"])
+    current_user = await session.get(User, UUID(token_data["user"]["id"]))
+    if current_user is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="User no longer exists"
+        )
     return current_user
 
 

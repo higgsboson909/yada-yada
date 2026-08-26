@@ -1,4 +1,6 @@
 from typing import TYPE_CHECKING
+from uuid import UUID, uuid4
+
 
 from sqlmodel import Field, Relationship, SQLModel
 
@@ -7,8 +9,8 @@ if TYPE_CHECKING:
 
 
 class Checklist_Items(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
     title: str
     is_done: bool = Field(default=False)
-    checklist_id: int = Field(foreign_key="checklists.id")
+    checklist_id: UUID = Field(foreign_key="checklists.id")
     checklist: Checklists = Relationship(back_populates="checklist_items")

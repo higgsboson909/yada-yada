@@ -29,6 +29,12 @@
       .vhead h2 { font-family: "Newsreader", serif; font-weight: 600; font-size: 24px; margin: 0; }
       .vhead small { color: #45474d; font-size: 13px; }
 
+      .grouphead { max-width: 1100px; margin: 0 auto 18px; padding-top: 10px; border-top: 2px solid #aeb1b7; }
+      .grouphead h2 { font-family: "Newsreader", serif; font-weight: 600; font-size: 21px; margin: 14px 0 4px; }
+      .grouphead p { margin: 0; font-size: 13px; line-height: 1.5; color: #45474d; }
+      .chip.src i { box-shadow: 0 0 0 2px #1c1c1e; }
+      .chip.src b { color: #09090b; }
+
       .swatchset { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
       .swgroup { background: #dfe1e5; border-radius: 12px; padding: 12px; }
       .swgroup h3 { margin: 0 0 8px; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #55575d; }
@@ -52,11 +58,12 @@
         padding: 16px;
         overflow: hidden;
       }
-      .bar { display: flex; align-items: center; justify-content: space-between; padding-bottom: 12px; border-bottom: 1px solid var(--c-border); }
+      .bar { display: flex; align-items: center; justify-content: space-between; margin: -16px -16px 0; padding: 12px 16px; background: var(--c-surface); border-bottom: 1px solid var(--c-border); }
       .logo { font-family: "Newsreader", serif; font-weight: 600; font-size: 20px; }
       .logo b { color: var(--c-accent); }
       .iconbtn { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; color: var(--c-muted); }
       .cols { display: grid; grid-template-columns: 150px 1fr; gap: 14px; margin-top: 14px; }
+      .side { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; padding: 10px; }
       .side-h { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--c-subtle); font-weight: 700; margin: 0 0 6px; }
       .side-h.mt { margin-top: 14px; }
       .row { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 9px; color: var(--c-muted); font-size: 13px; }
@@ -86,8 +93,10 @@
   <body>
     <div class="intro">
       <h1>Palette options</h1>
-      <p>Five monochrome directions (shades of black, white, and gray). Each is shown in <b>light</b> and <b>dark</b>, with a swatch strip and a realistic slice of the app.</p>
-      <p>Pick one by number — e.g. “use palette 4”. You can also mix: “palette 2, but the primary button from palette 4”. I’ll then write the chosen values into <code>src/index.css</code>.</p>
+      <p>Seventeen directions in three groups: <b>1–5 monochrome</b>, <b>6–10 one signature colour</b>, <b>11–17 multi-colour systems</b>. Each is shown in <b>light</b> and <b>dark</b>, with a swatch strip and a realistic slice of the app.</p>
+      <p>Pick one by number — e.g. “use palette 12”. You can also mix: “palette 2, but the primary button from 9”. I’ll then write the chosen values into <code>src/index.css</code>.</p>
+      <p><b>About your colours:</b> the source hex is marked <code>source</code> in each swatch strip. A single hex can’t fill every role at accessible contrast, so where small text needs 4.5:1 the palette uses a deepened shade of the <i>same hue</i>, and dark mode uses a lightened one. The source colour still carries the identity — fills, checkboxes, brand dot, focus ring.</p>
+      <p><b>All 17 are contrast-checked</b> (WCAG AA 4.5:1 for text, 3:1 for graphical marks) in both themes.</p>
       <p><b>Note:</b> error/danger keeps a restrained red in every option so mistakes stay recognizable (color shouldn’t be the only signal). Say the word if you want danger fully grayscale too.</p>
     </div>
     <main id="root"></main>
@@ -142,19 +151,67 @@
       const palettes = [
         { name: '1 · Neutral Gray', note: 'true grayscale, no temperature',
           light: {canvas:'#fafafa',surface:'#ffffff','surface-muted':'#f5f5f5',border:'#e5e5e5','border-strong':'#a3a3a3',fg:'#171717',muted:'#525252',subtle:'#737373',primary:'#171717','primary-foreground':'#ffffff','primary-hover':'#404040',accent:'#262626','accent-foreground':'#fafafa','accent-soft':'#f5f5f5','accent-soft-foreground':'#404040',ring:'#a3a3a3',danger:'#b91c1c','danger-foreground':'#991b1b','danger-surface':'#fef2f2','danger-border':'#fecaca'},
-          dark: {canvas:'#0a0a0a',surface:'#171717','surface-muted':'#262626',border:'#262626','border-strong':'#525252',fg:'#fafafa',muted:'#a3a3a3',subtle:'#737373',primary:'#fafafa','primary-foreground':'#171717','primary-hover':'#e5e5e5',accent:'#e5e5e5','accent-foreground':'#171717','accent-soft':'#262626','accent-soft-foreground':'#d4d4d4',ring:'#525252',danger:'#fca5a5','danger-foreground':'#fecaca','danger-surface':'#450a0a','danger-border':'#7f1d1d'} },
+          dark: {canvas:'#0a0a0a',surface:'#171717','surface-muted':'#262626',border:'#262626','border-strong':'#525252',fg:'#fafafa',muted:'#a3a3a3',subtle:'#818181',primary:'#fafafa','primary-foreground':'#171717','primary-hover':'#e5e5e5',accent:'#e5e5e5','accent-foreground':'#171717','accent-soft':'#262626','accent-soft-foreground':'#d4d4d4',ring:'#525252',danger:'#fca5a5','danger-foreground':'#fecaca','danger-surface':'#450a0a','danger-border':'#7f1d1d'} },
         { name: '2 · Warm Paper & Ink', note: 'warm stone tint, paper + ink',
           light: {canvas:'#fafaf9',surface:'#ffffff','surface-muted':'#f5f5f4',border:'#e7e5e4','border-strong':'#a8a29e',fg:'#1c1917',muted:'#57534e',subtle:'#78716c',primary:'#1c1917','primary-foreground':'#fafaf9','primary-hover':'#44403c',accent:'#292524','accent-foreground':'#fafaf9','accent-soft':'#f5f5f4','accent-soft-foreground':'#44403c',ring:'#a8a29e',danger:'#b91c1c','danger-foreground':'#991b1b','danger-surface':'#fef2f2','danger-border':'#fecaca'},
-          dark: {canvas:'#0c0a09',surface:'#1c1917','surface-muted':'#292524',border:'#292524','border-strong':'#57534e',fg:'#fafaf9',muted:'#a8a29e',subtle:'#78716c',primary:'#fafaf9','primary-foreground':'#1c1917','primary-hover':'#e7e5e4',accent:'#e7e5e4','accent-foreground':'#1c1917','accent-soft':'#292524','accent-soft-foreground':'#d6d3d1',ring:'#57534e',danger:'#fca5a5','danger-foreground':'#fecaca','danger-surface':'#450a0a','danger-border':'#7f1d1d'} },
+          dark: {canvas:'#0c0a09',surface:'#1c1917','surface-muted':'#292524',border:'#292524','border-strong':'#57534e',fg:'#fafaf9',muted:'#a8a29e',subtle:'#88817d',primary:'#fafaf9','primary-foreground':'#1c1917','primary-hover':'#e7e5e4',accent:'#e7e5e4','accent-foreground':'#1c1917','accent-soft':'#292524','accent-soft-foreground':'#d6d3d1',ring:'#57534e',danger:'#fca5a5','danger-foreground':'#fecaca','danger-surface':'#450a0a','danger-border':'#7f1d1d'} },
         { name: '3 · Cool Slate', note: 'cool blue-gray, crisp',
           light: {canvas:'#f8fafc',surface:'#ffffff','surface-muted':'#f1f5f9',border:'#e2e8f0','border-strong':'#94a3b8',fg:'#0f172a',muted:'#475569',subtle:'#64748b',primary:'#0f172a','primary-foreground':'#f8fafc','primary-hover':'#334155',accent:'#1e293b','accent-foreground':'#f8fafc','accent-soft':'#f1f5f9','accent-soft-foreground':'#334155',ring:'#94a3b8',danger:'#b91c1c','danger-foreground':'#991b1b','danger-surface':'#fef2f2','danger-border':'#fecaca'},
-          dark: {canvas:'#020617',surface:'#0f172a','surface-muted':'#1e293b',border:'#1e293b','border-strong':'#475569',fg:'#f8fafc',muted:'#94a3b8',subtle:'#64748b',primary:'#f8fafc','primary-foreground':'#0f172a','primary-hover':'#e2e8f0',accent:'#e2e8f0','accent-foreground':'#0f172a','accent-soft':'#1e293b','accent-soft-foreground':'#cbd5e1',ring:'#475569',danger:'#fca5a5','danger-foreground':'#fecaca','danger-surface':'#450a0a','danger-border':'#7f1d1d'} },
+          dark: {canvas:'#020617',surface:'#0f172a','surface-muted':'#1e293b',border:'#1e293b','border-strong':'#475569',fg:'#f8fafc',muted:'#94a3b8',subtle:'#738296',primary:'#f8fafc','primary-foreground':'#0f172a','primary-hover':'#e2e8f0',accent:'#e2e8f0','accent-foreground':'#0f172a','accent-soft':'#1e293b','accent-soft-foreground':'#cbd5e1',ring:'#475569',danger:'#fca5a5','danger-foreground':'#fecaca','danger-surface':'#450a0a','danger-border':'#7f1d1d'} },
         { name: '4 · High-Contrast Mono', note: 'pure black + white, stark/gallery',
           light: {canvas:'#ffffff',surface:'#ffffff','surface-muted':'#f4f4f5',border:'#d4d4d8','border-strong':'#18181b',fg:'#09090b',muted:'#3f3f46',subtle:'#52525b',primary:'#09090b','primary-foreground':'#ffffff','primary-hover':'#27272a',accent:'#09090b','accent-foreground':'#ffffff','accent-soft':'#f4f4f5','accent-soft-foreground':'#18181b',ring:'#18181b',danger:'#dc2626','danger-foreground':'#991b1b','danger-surface':'#fef2f2','danger-border':'#fecaca'},
-          dark: {canvas:'#000000',surface:'#09090b','surface-muted':'#18181b',border:'#27272a','border-strong':'#a1a1aa',fg:'#ffffff',muted:'#a1a1aa',subtle:'#71717a',primary:'#ffffff','primary-foreground':'#000000','primary-hover':'#e4e4e7',accent:'#ffffff','accent-foreground':'#000000','accent-soft':'#18181b','accent-soft-foreground':'#e4e4e7',ring:'#a1a1aa',danger:'#fca5a5','danger-foreground':'#fecaca','danger-surface':'#450a0a','danger-border':'#7f1d1d'} },
+          dark: {canvas:'#000000',surface:'#09090b','surface-muted':'#18181b',border:'#27272a','border-strong':'#a1a1aa',fg:'#ffffff',muted:'#a1a1aa',subtle:'#797982',primary:'#ffffff','primary-foreground':'#000000','primary-hover':'#e4e4e7',accent:'#ffffff','accent-foreground':'#000000','accent-soft':'#18181b','accent-soft-foreground':'#e4e4e7',ring:'#a1a1aa',danger:'#fca5a5','danger-foreground':'#fecaca','danger-surface':'#450a0a','danger-border':'#7f1d1d'} },
         { name: '5 · Soft Charcoal', note: 'gentle, lower-contrast, no pure black',
           light: {canvas:'#fafafa',surface:'#ffffff','surface-muted':'#f4f4f5',border:'#e4e4e7','border-strong':'#a1a1aa',fg:'#27272a',muted:'#52525b',subtle:'#71717a',primary:'#3f3f46','primary-foreground':'#fafafa','primary-hover':'#52525b',accent:'#52525b','accent-foreground':'#fafafa','accent-soft':'#f4f4f5','accent-soft-foreground':'#3f3f46',ring:'#a1a1aa',danger:'#b91c1c','danger-foreground':'#991b1b','danger-surface':'#fef2f2','danger-border':'#fecaca'},
-          dark: {canvas:'#18181b',surface:'#27272a','surface-muted':'#3f3f46',border:'#3f3f46','border-strong':'#71717a',fg:'#f4f4f5',muted:'#a1a1aa',subtle:'#71717a',primary:'#e4e4e7','primary-foreground':'#27272a','primary-hover':'#d4d4d8',accent:'#d4d4d8','accent-foreground':'#27272a','accent-soft':'#3f3f46','accent-soft-foreground':'#d4d4d8',ring:'#71717a',danger:'#fca5a5','danger-foreground':'#fecaca','danger-surface':'#450a0a','danger-border':'#7f1d1d'} },
+          dark: {canvas:'#18181b',surface:'#27272a','surface-muted':'#3f3f46',border:'#3f3f46','border-strong':'#71717a',fg:'#f4f4f5',muted:'#a1a1aa',subtle:'#8e8e95',primary:'#e4e4e7','primary-foreground':'#27272a','primary-hover':'#d4d4d8',accent:'#d4d4d8','accent-foreground':'#27272a','accent-soft':'#3f3f46','accent-soft-foreground':'#d4d4d8',ring:'#71717a',danger:'#fca5a5','danger-foreground':'#fecaca','danger-surface':'#450a0a','danger-border':'#7f1d1d'} },
+
+        { name: '6 · Teal Ink', note: 'teal is dark enough to be the ink', source: '#099078',
+          light: {canvas:'#fafafa',surface:'#ffffff','surface-muted':'#f1f6f4',border:'#e3e9e7','border-strong':'#99a5a2',fg:'#131f1d',muted:'#4c5a57',subtle:'#6b7875',primary:'#077a65','primary-foreground':'#ffffff','primary-hover':'#099078',accent:'#099078','accent-foreground':'#ffffff','accent-soft':'#e2f4f0','accent-soft-foreground':'#076152',ring:'#099078',danger:'#b91c1c','danger-foreground':'#991b1b','danger-surface':'#fef2f2','danger-border':'#fecaca'},
+          dark: {canvas:'#080b0b',surface:'#141a19','surface-muted':'#1e2726',border:'#1e2726','border-strong':'#4a5a57',fg:'#f0f5f4',muted:'#9fb0ad',subtle:'#778582',primary:'#12a892','primary-foreground':'#04231d','primary-hover':'#2fb89f',accent:'#12a892','accent-foreground':'#04231d','accent-soft':'#0d2b26','accent-soft-foreground':'#5fd3bf',ring:'#12a892',danger:'#fca5a5','danger-foreground':'#fecaca','danger-surface':'#450a0a','danger-border':'#7f1d1d'} },
+
+        { name: '7 · Soft Blue Chip', note: 'color as a filled chip with dark text on it', source: '#75B3E3',
+          light: {canvas:'#fafafa',surface:'#ffffff','surface-muted':'#f3f6f9',border:'#e4e9ee','border-strong':'#9aa4ae',fg:'#14191f',muted:'#4c545c',subtle:'#6e767e',primary:'#75b3e3','primary-foreground':'#0b1f2e','primary-hover':'#8fc2ea',accent:'#2f6f9f','accent-foreground':'#ffffff','accent-soft':'#dcebf7','accent-soft-foreground':'#1f5a85',ring:'#75b3e3',danger:'#b91c1c','danger-foreground':'#991b1b','danger-surface':'#fef2f2','danger-border':'#fecaca'},
+          dark: {canvas:'#0a0c0e',surface:'#14181c','surface-muted':'#1e242a',border:'#1e242a','border-strong':'#4a545e',fg:'#f2f5f8',muted:'#a2acb6',subtle:'#7a828a',primary:'#75b3e3','primary-foreground':'#0b1f2e','primary-hover':'#8fc2ea',accent:'#75b3e3','accent-foreground':'#0b1f2e','accent-soft':'#142833','accent-soft-foreground':'#a8cfee',ring:'#75b3e3',danger:'#fca5a5','danger-foreground':'#fecaca','danger-surface':'#450a0a','danger-border':'#7f1d1d'} },
+
+        { name: '8 · Indigo Ink', note: 'indigo as the action color', source: '#5B77E3',
+          light: {canvas:'#fafafa',surface:'#ffffff','surface-muted':'#f3f4f9',border:'#e5e7ef','border-strong':'#9ba0b0',fg:'#15171f',muted:'#4d505c',subtle:'#6f7280',primary:'#4a63d0','primary-foreground':'#ffffff','primary-hover':'#5b77e3',accent:'#4a63d0','accent-foreground':'#ffffff','accent-soft':'#e6e9fb','accent-soft-foreground':'#3a4bb0',ring:'#5b77e3',danger:'#b91c1c','danger-foreground':'#991b1b','danger-surface':'#fef2f2','danger-border':'#fecaca'},
+          dark: {canvas:'#0a0b0f',surface:'#15171f','surface-muted':'#1f222d',border:'#1f222d','border-strong':'#4c5160',fg:'#f3f4f8',muted:'#a4a8b6',subtle:'#7d818e',primary:'#7b91ea','primary-foreground':'#0b0f2b','primary-hover':'#94a6f0',accent:'#8b9fee','accent-foreground':'#0b0f2b','accent-soft':'#1a1f45','accent-soft-foreground':'#aab8f3',ring:'#5b77e3',danger:'#fca5a5','danger-foreground':'#fecaca','danger-surface':'#450a0a','danger-border':'#7f1d1d'} },
+
+        { name: '9 · Sky Highlight', note: 'bright fill on a cool slate base', source: '#78BFFE',
+          light: {canvas:'#f9fafb',surface:'#ffffff','surface-muted':'#f1f5f9',border:'#e2e8f0','border-strong':'#94a3b8',fg:'#0f172a',muted:'#475569',subtle:'#64748b',primary:'#78bffe','primary-foreground':'#06263d','primary-hover':'#93cbfe',accent:'#1e70b5','accent-foreground':'#ffffff','accent-soft':'#e0f0fe','accent-soft-foreground':'#175d96',ring:'#78bffe',danger:'#b91c1c','danger-foreground':'#991b1b','danger-surface':'#fef2f2','danger-border':'#fecaca'},
+          dark: {canvas:'#020617',surface:'#0f172a','surface-muted':'#1e293b',border:'#1e293b','border-strong':'#475569',fg:'#f8fafc',muted:'#94a3b8',subtle:'#738296',primary:'#78bffe','primary-foreground':'#06263d','primary-hover':'#93cbfe',accent:'#78bffe','accent-foreground':'#06263d','accent-soft':'#10304a','accent-soft-foreground':'#a5d5fe',ring:'#78bffe',danger:'#fca5a5','danger-foreground':'#fecaca','danger-surface':'#450a0a','danger-border':'#7f1d1d'} },
+
+        { name: '10 · Lavender Paper', note: 'the color becomes the paper, ink stays near-black', source: '#CED0F1',
+          light: {canvas:'#ced0f1',surface:'#ffffff','surface-muted':'#e2e3f6',border:'#b9bbe4','border-strong':'#7f82be',fg:'#14152b',muted:'#454670',subtle:'#4e5080',primary:'#2a2c52','primary-foreground':'#ffffff','primary-hover':'#3d4074',accent:'#454bb5','accent-foreground':'#ffffff','accent-soft':'#e2e3f6','accent-soft-foreground':'#363a94',ring:'#8b8dc4',danger:'#b91c1c','danger-foreground':'#991b1b','danger-surface':'#fef2f2','danger-border':'#fecaca'},
+          dark: {canvas:'#0b0c18',surface:'#15172a','surface-muted':'#1f2138',border:'#1f2138','border-strong':'#4b4e73',fg:'#ecedf9',muted:'#a6a8c8',subtle:'#7c7fa2',primary:'#ced0f1','primary-foreground':'#15172a','primary-hover':'#dcdef6',accent:'#ced0f1','accent-foreground':'#15172a','accent-soft':'#23264a','accent-soft-foreground':'#c2c4ef',ring:'#8b8dc4',danger:'#fca5a5','danger-foreground':'#fecaca','danger-surface':'#450a0a','danger-border':'#7f1d1d'} },
+
+        { name: '11 · Teal on Lavender', note: 'lavender paper + teal ink', source: '#CED0F1 + #099078',
+          light: {canvas:'#d6d8f3',surface:'#ffffff','surface-muted':'#e6e7f8',border:'#bfc1e8','border-strong':'#8285c2',fg:'#12211e',muted:'#405a55',subtle:'#5a6b67',primary:'#077a65','primary-foreground':'#ffffff','primary-hover':'#099078',accent:'#099078','accent-foreground':'#ffffff','accent-soft':'#e2f4f0','accent-soft-foreground':'#076152',ring:'#099078',danger:'#b91c1c','danger-foreground':'#991b1b','danger-surface':'#fef2f2','danger-border':'#fecaca'},
+          dark: {canvas:'#0b0c18',surface:'#15172a','surface-muted':'#1f2138',border:'#1f2138','border-strong':'#4b4e73',fg:'#ecedf9',muted:'#a6a8c8',subtle:'#7c7fa2',primary:'#12a892','primary-foreground':'#04231d','primary-hover':'#2fb89f',accent:'#12a892','accent-foreground':'#04231d','accent-soft':'#0d2b26','accent-soft-foreground':'#5fd3bf',ring:'#12a892',danger:'#fca5a5','danger-foreground':'#fecaca','danger-surface':'#450a0a','danger-border':'#7f1d1d'} },
+
+        { name: '12 · Indigo & Sky', note: 'indigo acts, sky highlights — two-tier colour', source: '#5B77E3 + #78BFFE',
+          light: {canvas:'#f9fafb',surface:'#ffffff','surface-muted':'#f1f5f9',border:'#e2e8f0','border-strong':'#94a3b8',fg:'#0f172a',muted:'#475569',subtle:'#64748b',primary:'#4a63d0','primary-foreground':'#ffffff','primary-hover':'#5b77e3',accent:'#1e70b5','accent-foreground':'#ffffff','accent-soft':'#e0f0fe','accent-soft-foreground':'#175d96',ring:'#78bffe',danger:'#b91c1c','danger-foreground':'#991b1b','danger-surface':'#fef2f2','danger-border':'#fecaca'},
+          dark: {canvas:'#020617',surface:'#0f172a','surface-muted':'#1e293b',border:'#1e293b','border-strong':'#475569',fg:'#f8fafc',muted:'#94a3b8',subtle:'#738296',primary:'#7b91ea','primary-foreground':'#0b0f2b','primary-hover':'#94a6f0',accent:'#78bffe','accent-foreground':'#06263d','accent-soft':'#10304a','accent-soft-foreground':'#a5d5fe',ring:'#78bffe',danger:'#fca5a5','danger-foreground':'#fecaca','danger-surface':'#450a0a','danger-border':'#7f1d1d'} },
+
+        { name: '13 · Sky on Ink', note: 'dark-first design, light derived from it', source: '#78BFFE',
+          light: {canvas:'#f7fafc',surface:'#ffffff','surface-muted':'#eef4f9',border:'#dde7ef','border-strong':'#8fa2b5',fg:'#0c1622',muted:'#44566a',subtle:'#64768a',primary:'#0e5a8f','primary-foreground':'#ffffff','primary-hover':'#1e70b5',accent:'#1e70b5','accent-foreground':'#ffffff','accent-soft':'#dcefff','accent-soft-foreground':'#0e5a8f',ring:'#78bffe',danger:'#b91c1c','danger-foreground':'#991b1b','danger-surface':'#fef2f2','danger-border':'#fecaca'},
+          dark: {canvas:'#05080f',surface:'#0d1420','surface-muted':'#16202f',border:'#16202f','border-strong':'#47566b',fg:'#f2f6fa',muted:'#9fb0c4',subtle:'#7b8b9e',primary:'#78bffe','primary-foreground':'#04223a','primary-hover':'#93cbfe',accent:'#78bffe','accent-foreground':'#04223a','accent-soft':'#0f2c45','accent-soft-foreground':'#a5d5fe',ring:'#78bffe',danger:'#fca5a5','danger-foreground':'#fecaca','danger-surface':'#450a0a','danger-border':'#7f1d1d'} },
+
+        { name: '14 · Lavender Wash', note: 'lavender only tints the sidebar; indigo is the ink', source: '#CED0F1 + #5B77E3',
+          light: {canvas:'#fafafb',surface:'#ffffff','surface-muted':'#eceef9',border:'#e3e5f2','border-strong':'#9295c0',fg:'#15171f',muted:'#4d505c',subtle:'#6f7280',primary:'#4a63d0','primary-foreground':'#ffffff','primary-hover':'#5b77e3',accent:'#4a63d0','accent-foreground':'#ffffff','accent-soft':'#ced0f1','accent-soft-foreground':'#2f3480',ring:'#5b77e3',danger:'#b91c1c','danger-foreground':'#991b1b','danger-surface':'#fef2f2','danger-border':'#fecaca'},
+          dark: {canvas:'#0a0b0f',surface:'#15171f','surface-muted':'#22243a',border:'#22243a','border-strong':'#4e5170',fg:'#f3f4f8',muted:'#a4a8b6',subtle:'#7d818e',primary:'#ced0f1','primary-foreground':'#15172a','primary-hover':'#dcdef6',accent:'#ced0f1','accent-foreground':'#15172a','accent-soft':'#23264a','accent-soft-foreground':'#c2c4ef',ring:'#8b8dc4',danger:'#fca5a5','danger-foreground':'#fecaca','danger-surface':'#450a0a','danger-border':'#7f1d1d'} },
+
+        { name: '15 · Teal & Soft Blue', note: 'teal acts, soft blue carries links and badges', source: '#099078 + #75B3E3',
+          light: {canvas:'#fafafa',surface:'#ffffff','surface-muted':'#f1f6f6',border:'#e3eaea','border-strong':'#97a5a5',fg:'#131f1f',muted:'#4b5a5a',subtle:'#6a7878',primary:'#077a65','primary-foreground':'#ffffff','primary-hover':'#099078',accent:'#2f6f9f','accent-foreground':'#ffffff','accent-soft':'#dcebf7','accent-soft-foreground':'#1f5a85',ring:'#099078',danger:'#b91c1c','danger-foreground':'#991b1b','danger-surface':'#fef2f2','danger-border':'#fecaca'},
+          dark: {canvas:'#080b0b',surface:'#141a1a','surface-muted':'#1e2828',border:'#1e2828','border-strong':'#495a5a',fg:'#f0f5f5',muted:'#9fb0b0',subtle:'#778585',primary:'#12a892','primary-foreground':'#04231d','primary-hover':'#2fb89f',accent:'#75b3e3','accent-foreground':'#0b1f2e','accent-soft':'#142833','accent-soft-foreground':'#a8cfee',ring:'#12a892',danger:'#fca5a5','danger-foreground':'#fecaca','danger-surface':'#450a0a','danger-border':'#7f1d1d'} },
+
+        { name: '16 · Full Spectrum', note: 'all five colours, each in a distinct role', source: 'all five',
+          light: {canvas:'#fafafb',surface:'#ffffff','surface-muted':'#eceef9',border:'#e2e5f0','border-strong':'#9297bd',fg:'#14162a',muted:'#474b66',subtle:'#666a88',primary:'#4a63d0','primary-foreground':'#ffffff','primary-hover':'#5b77e3',accent:'#077a65','accent-foreground':'#ffffff','accent-soft':'#ced0f1','accent-soft-foreground':'#2f3480',ring:'#78bffe',danger:'#b91c1c','danger-foreground':'#991b1b','danger-surface':'#fef2f2','danger-border':'#fecaca'},
+          dark: {canvas:'#08090f',surface:'#131522','surface-muted':'#1e2135',border:'#1e2135','border-strong':'#4a4f72',fg:'#f0f1f8',muted:'#a3a7bd',subtle:'#7b7f99',primary:'#7b91ea','primary-foreground':'#0b0f2b','primary-hover':'#94a6f0',accent:'#12a892','accent-foreground':'#04231d','accent-soft':'#23264a','accent-soft-foreground':'#c2c4ef',ring:'#78bffe',danger:'#fca5a5','danger-foreground':'#fecaca','danger-surface':'#450a0a','danger-border':'#7f1d1d'} },
+
+        { name: '17 · Cool Duotone', note: 'only the two blues, minimal neutrals', source: '#5B77E3 + #78BFFE',
+          light: {canvas:'#f8fafc',surface:'#ffffff','surface-muted':'#eef3fb',border:'#dfe6f5','border-strong':'#8f9dc4',fg:'#101427',muted:'#454c6b',subtle:'#656d8d',primary:'#4a63d0','primary-foreground':'#ffffff','primary-hover':'#5b77e3',accent:'#1e70b5','accent-foreground':'#ffffff','accent-soft':'#dbeafe','accent-soft-foreground':'#1c4fa8',ring:'#78bffe',danger:'#b91c1c','danger-foreground':'#991b1b','danger-surface':'#fef2f2','danger-border':'#fecaca'},
+          dark: {canvas:'#05070f',surface:'#101427','surface-muted':'#1a1f3a',border:'#1a1f3a','border-strong':'#4a5280',fg:'#f1f3fa',muted:'#a2a8c6',subtle:'#7c83a4',primary:'#78bffe','primary-foreground':'#06263d','primary-hover':'#93cbfe',accent:'#8b9fee','accent-foreground':'#0b0f2b','accent-soft':'#17204a','accent-soft-foreground':'#aab8f3',ring:'#78bffe',danger:'#fca5a5','danger-foreground':'#fecaca','danger-surface':'#450a0a','danger-border':'#7f1d1d'} },
       ]
 
       const chips = (map) => SWATCHES.map((k) =>
@@ -165,15 +222,33 @@
         return `<div class="panelwrap"><p class="panellabel">${label}</p><div class="mock" style="${vars}">${MOCK}</div></div>`
       }
 
-      document.getElementById('root').innerHTML = palettes.map((p) => `
+      const GROUPS = {
+        mono: { title: 'Monochrome (1–5)', blurb: 'Shades of black and white. Hierarchy comes from contrast and weight, not hue.' },
+        signature: { title: 'One signature colour (6–10)', blurb: 'Neutral base plus one of your colours doing real work. Each colour is used in the role its luminance actually supports — ink, fill, or paper — so text stays readable.' },
+        combo: { title: 'Multi-colour systems (11–17)', blurb: 'Two or more of your colours with separated jobs: one colour acts (buttons), another highlights (links, badges), a third can become the paper. This is how a palette scales past a single accent.' },
+      }
+
+      let lastGroup = null
+      document.getElementById('root').innerHTML = palettes.map((p, i) => {
+        const group = i < 5 ? 'mono' : i < 10 ? 'signature' : 'combo'
+        let head = ''
+        if (group !== lastGroup) {
+          lastGroup = group
+          head = `<div class="grouphead"><h2>${GROUPS[group].title}</h2><p>${GROUPS[group].blurb}</p></div>`
+        }
+        const src = p.source
+          ? `<div class="chip src"><i style="background:${p.source}"></i><b>source</b><span>${p.source}</span></div>`
+          : ''
+        return head + `
         <section>
           <div class="vhead"><h2>${p.name}</h2><small>${p.note}</small></div>
           <div class="swatchset">
-            <div class="swgroup"><h3>Light</h3><div class="chips">${chips(p.light)}</div></div>
+            <div class="swgroup"><h3>Light</h3><div class="chips">${src}${chips(p.light)}</div></div>
             <div class="swgroup"><h3>Dark</h3><div class="chips">${chips(p.dark)}</div></div>
           </div>
           <div class="pair">${panel('Light', p.light)}${panel('Dark', p.dark)}</div>
-        </section>`).join('')
+        </section>`
+      }).join('')
     </script>
   </body>
 </html>

@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from uuid import UUID
 
 
 class ChecklistItem_Create(BaseModel):
@@ -7,10 +8,10 @@ class ChecklistItem_Create(BaseModel):
 
 
 class ChecklistItem_Read(BaseModel):
-    id: int
+    id: UUID
     title: str
     is_done: bool = False
-    checklist_id: int
+    checklist_id: UUID
 
 
 class ChecklistItem_Update(BaseModel):

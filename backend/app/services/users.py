@@ -17,6 +17,10 @@ class UserService:
 
     async def add(self, credentials: UserCreate) -> User:
 
+        result = await self.session.execute(select(User).where(User.email == credentials.email))
+        if result.scalar_one_or_none() is not None:
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email is already registered")
+
         user = User(
             **credentials.model_dump(exclude={"password"}),
             password_hash=password_hash.hash(credentials.password),
@@ -37,6 +41,6 @@ class UserService:
             )
 
         token = generate_access_token(
-            data={"user": {"email": user.email, "id": user.id}}
+            data={"user": {"email": user.email, "id": str(user.id)}}
         )
         return token
