@@ -31,19 +31,19 @@ export function ChecklistRow({ checklist }: { checklist: Checklist }) {
   }
 
   return (
-    <div className="mb-3 rounded-xl bg-stone-50 p-2.5">
+    <div className="mb-3 rounded-xl bg-stone-100 p-2.5 dark:bg-stone-800/70">
       <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 text-[13px]">
         <CheckSquare size={16} aria-hidden="true" />
         <strong className="min-w-0 overflow-wrap-anywhere leading-relaxed">{checklist.title}</strong>
-        <button className="grid size-11 place-items-center rounded-xl border-0 bg-transparent text-stone-500 transition hover:bg-stone-100 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50" onClick={requestDelete} aria-label={`Delete ${checklist.title} checklist`} disabled={deleteChecklist.isPending}><Trash2 size={14} aria-hidden="true" /></button>
+        <button className="grid size-11 place-items-center rounded-xl border-0 bg-transparent text-stone-600 transition hover:bg-stone-200 hover:text-red-700 dark:text-stone-300 dark:hover:bg-stone-700 dark:hover:text-red-300 disabled:cursor-not-allowed disabled:opacity-50" onClick={requestDelete} aria-label={`Delete ${checklist.title} checklist`} disabled={deleteChecklist.isPending}><Trash2 size={14} aria-hidden="true" /></button>
       </div>
       {items.isLoading && <CollectionState>Loading items…</CollectionState>}
       {items.isError && <ErrorNotice error={items.error} />}
       {items.data?.length === 0 && <CollectionState>No items yet.</CollectionState>}
       {items.data?.map((item) => (
-        <button className="flex min-h-11 w-full items-center gap-2 border-0 bg-transparent pl-6 text-left text-[13px] text-stone-700" key={item.id} onClick={() => toggleItem.mutate(item)} disabled={toggleItem.isPending} aria-pressed={item.is_done}>
-          <span className={`grid size-4 shrink-0 place-items-center rounded-[5px] border ${item.is_done ? 'border-amber-600 bg-amber-600 text-white' : 'border-stone-300'}`} aria-hidden="true">{item.is_done && <Check size={12} />}</span>
-          <span className={`min-w-0 overflow-wrap-anywhere leading-relaxed ${item.is_done ? 'text-stone-500 line-through' : ''}`}>{item.title}</span>
+        <button className="flex min-h-11 w-full items-center gap-2 border-0 bg-transparent pl-6 text-left text-[13px] text-stone-700 dark:text-stone-200" key={item.id} onClick={() => toggleItem.mutate(item)} disabled={toggleItem.isPending} aria-pressed={item.is_done}>
+          <span className={`grid size-4 shrink-0 place-items-center rounded-[5px] border ${item.is_done ? 'border-amber-600 bg-amber-600 text-white dark:border-amber-400 dark:bg-amber-400 dark:text-amber-950' : 'border-stone-300 dark:border-stone-600'}`} aria-hidden="true">{item.is_done && <Check size={12} />}</span>
+          <span className={`min-w-0 overflow-wrap-anywhere leading-relaxed ${item.is_done ? 'text-stone-500 line-through dark:text-stone-400' : ''}`}>{item.title}</span>
         </button>
       ))}
       <form className="flex min-h-11 items-center pl-6 pt-2" onSubmit={submitItem}>

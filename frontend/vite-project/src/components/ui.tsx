@@ -6,12 +6,12 @@ function getErrorMessage(error: unknown): string {
 
 export function ErrorNotice({ error }: { error: unknown }) {
   return (
-    <div className="m-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-[13px] leading-snug text-red-900" role="alert">
+    <div className="m-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-[13px] leading-snug text-red-900 dark:border-red-900 dark:bg-red-950/60 dark:text-red-100" role="alert">
       {getErrorMessage(error)}
     </div>
   )
 }
 
 export function CollectionState({ children }: { children: ReactNode }) {
-  return <p className="mx-2 mb-3 mt-1 text-xs leading-relaxed text-stone-600">{children}</p>
+  return <p className="mx-2 mb-3 mt-1 text-xs leading-relaxed text-stone-600 dark:text-stone-400">{children}</p>
 }
