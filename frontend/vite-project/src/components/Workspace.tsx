@@ -1,9 +1,10 @@
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FileText, LogOut, Menu, Plus, Trash2, X } from "lucide-react";
 import { api } from "../api";
-import type { Note, Checklist } from "../api";
+import type { Note } from "../api";
+import { ChecklistEditor } from "./ChecklistEditor";
 import { ChecklistRow } from "./ChecklistRow";
 import { ChecklistPage } from "./ChecklistPage";
 import { NoteEditor } from "./NoteEditor";
@@ -19,10 +20,11 @@ export function Workspace({ onLoggedOut }: { onLoggedOut: () => void }) {
   const [selectedNoteId, setSelectedNoteId] = useState<string>();
   const [selectedChecklistId, setSelectedChecklistId] = useState<string>();
   const [creatingNote, setCreatingNote] = useState(false);
+  const [creatingChecklist, setCreatingChecklist] = useState(false);
   const [navigationOpen, setNavigationOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [newChecklist, setNewChecklist] = useState("");
   const [deleteConfirm, setDeleteConfirm] = useState<{ noteId: string; title: string } | null>(null);
+  const [deleteChecklistConfirm, setDeleteChecklistConfirm] = useState<{ checklistId: string; title: string } | null>(null);
   const notes = useQuery({ queryKey: ["notes"], queryFn: api.notes });
   const checklists = useQuery({
     queryKey: ["checklists"],
@@ -50,26 +52,34 @@ export function Workspace({ onLoggedOut }: { onLoggedOut: () => void }) {
       }
     },
   });
-  const createChecklist = useMutation({
-    mutationFn: api.createChecklist,
+  const deleteChecklist = useMutation({
+    mutationFn: (checklistId: string) => api.deleteChecklist(checklistId),
     onSuccess: async () => {
-      setNewChecklist("");
       await queryClient.invalidateQueries({ queryKey: ["checklists"] });
+      setDeleteChecklistConfirm(null);
+      if (selectedChecklistId === deleteChecklistConfirm?.checklistId) {
+        setSelectedChecklistId(undefined);
+      }
     },
   });
-  const submitChecklist = (event: FormEvent) => {
-    event.preventDefault();
-    const title = newChecklist.trim();
-    if (title && !createChecklist.isPending) createChecklist.mutate(title);
-  };
   const startNote = () => {
     setSelectedNoteId(undefined);
     setCreatingNote(true);
     setNavigationOpen(false);
   };
+  const startChecklist = () => {
+    setSelectedNoteId(undefined);
+    setCreatingNote(false);
+    setSelectedChecklistId(undefined);
+    setCreatingChecklist(true);
+    setNavigationOpen(false);
+  };
   const closeEditor = () => {
     setSelectedNoteId(undefined);
     setCreatingNote(false);
+  };
+  const closeChecklistEditor = () => {
+    setCreatingChecklist(false);
   };
   const closeChecklist = () => {
     setSelectedChecklistId(undefined);
@@ -148,10 +158,10 @@ export function Workspace({ onLoggedOut }: { onLoggedOut: () => void }) {
           {notes.data?.map((note: Note) => (
             <div
               key={note.id}
-              className="group grid min-h-11 w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2.5 rounded-xl px-2.5"
+              className={`group grid min-h-11 w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2.5 rounded-xl px-2.5 transition ${selectedNoteId === note.id ? "bg-surface-muted text-fg" : "bg-transparent text-muted hover:bg-surface-muted"}`}
             >
               <button
-                className={`col-span-2 flex items-center gap-2.5 rounded-xl border-0 text-left transition ${selectedNoteId === note.id ? "bg-surface-muted text-fg" : "bg-transparent text-muted hover:bg-surface-muted"}`}
+                className="col-span-2 flex items-center gap-2.5 rounded-xl border-0 text-left"
                 onClick={() => {
                   setSelectedNoteId(note.id);
                   setCreatingNote(false);
@@ -171,6 +181,14 @@ export function Workspace({ onLoggedOut }: { onLoggedOut: () => void }) {
             </div>
           ))}
           <div className={`${sectionHeadingClass} mt-7`}>
+            <button
+              className={miniButtonClass}
+              type="button"
+              onClick={startChecklist}
+              aria-label="Create checklist"
+            >
+              <Plus size={16} aria-hidden="true" />
+            </button>
             <span className="text-sm">Checklists</span>
           </div>
           {checklists.isLoading && (
@@ -179,7 +197,7 @@ export function Workspace({ onLoggedOut }: { onLoggedOut: () => void }) {
           {checklists.isError && <ErrorNotice error={checklists.error} />}
           {checklists.data?.length === 0 && (
             <CollectionState>
-              No checklists yet. Name one below.
+              No checklists yet. Create one with the plus button.
             </CollectionState>
           )}
           {checklists.data?.map((checklist) => (
@@ -192,34 +210,14 @@ export function Workspace({ onLoggedOut }: { onLoggedOut: () => void }) {
                 setCreatingNote(false);
                 setNavigationOpen(false);
               }}
+              onDeleteRequest={() =>
+                setDeleteChecklistConfirm({
+                  checklistId: checklist.id,
+                  title: checklist.title,
+                })
+              }
             />
           ))}
-          <form
-            className="mt-2.5 grid grid-cols-[1fr_auto] gap-1.5 rounded-xl border border-dashed border-border-strong p-2 pl-3"
-            onSubmit={submitChecklist}
-          >
-            <label className="sr-only" htmlFor="new-checklist">
-              New checklist name
-            </label>
-            <input
-              id="new-checklist"
-              className="w-full bg-transparent text-base text-fg outline-none placeholder:text-subtle"
-              value={newChecklist}
-              onChange={(event) => setNewChecklist(event.target.value)}
-              placeholder="New checklist"
-              disabled={createChecklist.isPending}
-            />
-            <button
-              className={miniButtonClass}
-              aria-label="Create checklist"
-              disabled={!newChecklist.trim() || createChecklist.isPending}
-            >
-              <Plus size={16} aria-hidden="true" />
-            </button>
-          </form>
-          {createChecklist.error && (
-            <ErrorNotice error={createChecklist.error} />
-          )}
         </aside>
         <section
           className="bg-canvas p-5 sm:p-[clamp(24px,6vw,84px)] flex-1"
@@ -231,6 +229,15 @@ export function Workspace({ onLoggedOut }: { onLoggedOut: () => void }) {
               note={selectedNote}
               onDone={closeEditor}
               onDeleted={closeEditor}
+            />
+          ) : creatingChecklist ? (
+            <ChecklistEditor
+              onCancel={closeChecklistEditor}
+              onCreated={(checklist) => {
+                setCreatingChecklist(false);
+                setSelectedChecklistId(checklist.id);
+                setNavigationOpen(false);
+              }}
             />
           ) : selectedChecklist ? (
             <ChecklistPage
@@ -264,6 +271,17 @@ export function Workspace({ onLoggedOut }: { onLoggedOut: () => void }) {
         }}
         onCancel={() => setDeleteConfirm(null)}
         isPending={deleteNote.isPending}
+      />
+      <DeleteConfirmationModal
+        isOpen={deleteChecklistConfirm !== null}
+        title={deleteChecklistConfirm?.title ?? ""}
+        onConfirm={() => {
+          if (deleteChecklistConfirm) {
+            deleteChecklist.mutate(deleteChecklistConfirm.checklistId);
+          }
+        }}
+        onCancel={() => setDeleteChecklistConfirm(null)}
+        isPending={deleteChecklist.isPending}
       />
     </div>
   );
