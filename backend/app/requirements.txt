@@ -586,9 +586,6 @@ typer==0.27.1 \
     # via
     #   fastapi-cli
     #   fastapi-cloud-cli
-typing==3.10.0.0 \
-    --hash=sha256:12fbdfbe7d6cca1a42e485229afcb0b0c8259258cfb919b8a5e2a5c953742f89 \
-    --hash=sha256:13b4ad211f54ddbf93e5901a9967b1e07720c1d1b78d596ac6a439641aa1b130
     # via app
 typing-extensions==4.16.0 \
     --hash=sha256:481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8 \
