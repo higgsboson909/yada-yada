@@ -4,7 +4,7 @@ import { CheckSquare, Plus } from "lucide-react";
 import { api } from "../api";
 import type { Checklist } from "../api";
 import { ChecklistItemComponent } from "./ChecklistItem";
-import { buttonClass, miniButtonClass } from "./styles";
+import { miniButtonClass } from "./styles";
 import { CollectionState, ErrorNotice } from "./ui";
 
 export function ChecklistPage({
