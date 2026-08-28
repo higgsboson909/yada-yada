@@ -19,14 +19,15 @@ class DatabaseSettings(BaseSettings):
     POSTGRES_DB: str
     POSTGRES_PORT: int
 
-    REDIS_HOST: str
-    REDIS_PORT: int
+    REDIS_HOST_OLD: str
+    REDIS_PORT_OLD: int
 
+    REDIS_URL: str
     model_config = _base_config
 
     @property
     def postgres_url(self) -> str:
-        return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+        return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}?ssl=require"
 
 
 db_settings = DatabaseSettings()
